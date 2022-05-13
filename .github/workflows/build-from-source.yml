@@ -1,0 +1,84 @@
+name: build-from-source
+on:
+  workflow_call:
+    inputs:
+      system-name:
+        required: true
+        type: string
+jobs:
+  build-to-image:
+    runs-on: ubuntu-latest
+    env:
+      SYSTEM_NAME: ${{ inputs.system-name }}
+    steps:
+    - id: setup-environment
+      name: setup-environment
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: init
+        step-name: setup-environment
+    - id: clone-cicd-manager-repo
+      name: clone-cicd-manager-repo
+      uses: actions/checkout@v2
+      with:
+        repository: ga-private-framework-poc/cicd-manager
+        ref: development
+        path: ${{ env.CICD_REPO_MGR_DIR }}
+    - id: parse-system-def
+      name: parse-system-def
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: init
+        step-name: parse-system-def
+    - id: parse-component-def
+      name: parse-component-def
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: init
+        step-name: parse-component-def
+    - id: clone-app-repo
+      name: clone-app-repo
+      uses: actions/checkout@v2
+      with:
+        ref: development
+        path: ${{ env.WORKING_DIR }}
+    - id: build
+      name: build
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: ${{ env.CODEBASE }}
+        step-name: build
+    - id: test
+      name: test
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: ${{ env.CODEBASE }}
+        step-name: test
+    - id: scan
+      name: scan
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: ${{ env.CODEBASE }}
+        step-name: scan
+    - id: build-image
+      name: build-image
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: image
+        step-name: build-image
+    - id: scan-image
+      name: scan-image
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: image
+        step-name: scan-image
+    - id: registry-login
+      name: registry-login
+      run: |
+        podman login -u ${IMAGE_REGISTRY_USERNAME} -p ${{ secrets.IMAGE_REGISTRY_PWD }} ${IMAGE_REGISTRY_URL}
+    - id: push-image
+      name: push-image
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: image
+        step-name: push-image

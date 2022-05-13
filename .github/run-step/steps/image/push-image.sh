@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+podman push ${IMAGE_REGISTRY_URL}/${IMAGE_REGISTRY_USERNAME}/${IMAGE_NAME}:${DEV_ENVIRONMENT}
