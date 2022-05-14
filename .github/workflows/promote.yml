@@ -59,7 +59,7 @@ jobs:
       IMAGE_NAME: ${{ needs.gather-system-info.outputs.IMAGE_NAME }}
       IMAGE_REGISTRY_URL: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_URL }}
       IMAGE_REGISTRY_USERNAME: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_USERNAME }}
-      IMAGE_REGISTRY_PWD: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_PWD }}
+      IMAGE_REGISTRY_PWD: ${{ secrets.IMAGE_REGISTRY_PWD }}
       OCP_URL: ${{ needs.gather-system-info.outputs.OCP_URL }}
       NON_PROD_ENVIRONMENTS: ${{ needs.gather-system-info.outputs.NON_PROD_ENVIRONMENTS }}
     strategy:
