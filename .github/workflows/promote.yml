@@ -41,7 +41,7 @@ jobs:
       WORKING_DIR: ${{ env.WORKING_DIR }}
       HELM_CHART_DIR: ${{ env.HELM_CHART_DIR }}
       COMPONENT_NAME: ${{ env.COMPONENT_NAME }}
-      IMAGE_NAME: ${{ env.COMPONENT_NAME }}
+      IMAGE_NAME: ${{ env.IMAGE_NAME }}
       DEV_BRANCH: ${{ env.DEV_BRANCH }}
       NON_PROD_ENVIRONMENTS: ${{ env.NON_PROD_ENVIRONMENTS }}
       IMAGE_REGISTRY_URL: ${{ env.IMAGE_REGISTRY_URL }}
