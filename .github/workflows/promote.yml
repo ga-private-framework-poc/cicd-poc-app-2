@@ -94,7 +94,7 @@ jobs:
       if: matrix.environment != 'dev'
       name: registry-login
       run: |
-        podman login -u ${IMAGE_REGISTRY_USERNAME} -p ${{ secrets.IMAGE_REGISTRY_PWD }} ${IMAGE_REGISTRY_URL}
+        skopeo login -u ${IMAGE_REGISTRY_USERNAME} -p ${{ secrets.IMAGE_REGISTRY_PWD }} ${IMAGE_REGISTRY_URL}
     - id: promote-image
       if: matrix.environment != 'dev'
       name: promote-image
