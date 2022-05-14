@@ -84,6 +84,11 @@ jobs:
       with:
         ref: ${{ needs.gather-system-info.outputs.DEV_BRANCH }}
         path: ${{ env.WORKING_DIR }}
+    - id: promote-check
+      if: matrix.environment != 'dev'
+      name:  promote-check
+      run: |
+        skopeo --version
     - id: promote-image
       if: matrix.environment != 'dev'
       name: promote-image

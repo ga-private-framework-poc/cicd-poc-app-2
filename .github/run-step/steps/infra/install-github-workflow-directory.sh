@@ -2,6 +2,7 @@
 
 set -ex
 
+git -C ${WORKING_DIR} rm -rf .github
 cp -RT ${CICD_REPO_MGR_DIR}/.github ${WORKING_DIR}/.github
 
 echo 'Generating .github directory for ${REPO_NAME}'
