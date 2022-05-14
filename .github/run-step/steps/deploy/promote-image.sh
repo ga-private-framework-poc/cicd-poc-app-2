@@ -2,7 +2,7 @@
 
 set -ex
 
-ENV_ARRAY=$(echo "${DEV_ENVIRONMENT} $(echo ${TEST_ENVIRONMENTS} | jq -jr  '" " + .[]')" | xargs)
+ENV_ARRAY=$(echo "$(echo ${NON_PROD_ENVIRONMENTS} | jq -jr  '" " + .[]')" | xargs)
 echo "ENV_ARRAY: ${ENV_ARRAY}"
 for ENV in ${ENV_ARRAY}
 do
