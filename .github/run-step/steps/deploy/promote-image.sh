@@ -15,7 +15,7 @@ do
 done
 
 skopeo copy --src-tls-verify=false --dest-tls-verify=false \
-       --src-creds ${IMAGE_REGISTRY_USERNAME}:${${IMAGE_REGISTRY_PWD} --dest-creds ${IMAGE_REGISTRY_USERNAME}:${${IMAGE_REGISTRY_PWD}
+       --src-creds ${IMAGE_REGISTRY_USERNAME}:${IMAGE_REGISTRY_PWD} --dest-creds ${IMAGE_REGISTRY_USERNAME}:${IMAGE_REGISTRY_PWD}
        docker://${IMAGE_REGISTRY_URL}/${IMAGE_REGISTRY_USERNAME}/${IMAGE_NAME}:${PREVIOUS_ENVIRONMENT} \
        docker://${IMAGE_REGISTRY_URL}/${IMAGE_REGISTRY_USERNAME}/${IMAGE_NAME}:${DEPLOY_ENV}
 
