@@ -41,6 +41,7 @@ jobs:
       WORKING_DIR: ${{ env.WORKING_DIR }}
       HELM_CHART_DIR: ${{ env.HELM_CHART_DIR }}
       COMPONENT_NAME: ${{ env.COMPONENT_NAME }}
+      IMAGE_NAME: ${{ env.COMPONENT_NAME }}
       TEST_ENVIRONMENTS: ${{ env.TEST_ENVIRONMENTS }}
       DEV_BRANCH: ${{ env.DEV_BRANCH }}
       NON_PROD_ENVIRONMENTS: ${{ env.NON_PROD_ENVIRONMENTS }}
@@ -57,6 +58,7 @@ jobs:
       HELM_CHART_DIR: ${{ needs.gather-system-info.outputs.HELM_CHART_DIR }}
       TEST_ENVIRONMENTS: ${{ needs.gather-system-info.outputs.TEST_ENVIRONMENTS }}
       COMPONENT_NAME: ${{ needs.gather-system-info.outputs.COMPONENT_NAME }}
+      IMAGE_NAME: ${{ needs.gather-system-info.outputs.COMPONENTIMAGE_NAME_NAME }}
       IMAGE_REGISTRY_URL: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_URL }}
       IMAGE_REGISTRY_USERNAME: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_USERNAME }}
       OCP_URL: ${{ needs.gather-system-info.outputs.OCP_URL }}
