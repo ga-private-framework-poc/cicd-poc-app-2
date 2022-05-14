@@ -1,4 +1,4 @@
 image-registry:
   url: quay.io
   username: rhn_gps_eslatis
-cluster-url: https://api.cluster-qtdc4.qtdc4.sandbox1844.opentlc.com:6443
+cluster-url: https://api.cluster-mj4w9.mj4w9.sandbox1722.opentlc.com:6443
