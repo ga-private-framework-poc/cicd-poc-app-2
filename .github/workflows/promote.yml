@@ -56,7 +56,7 @@ jobs:
       WORKING_DIR: ${{ needs.gather-system-info.outputs.WORKING_DIR }}
       HELM_CHART_DIR: ${{ needs.gather-system-info.outputs.HELM_CHART_DIR }}
       COMPONENT_NAME: ${{ needs.gather-system-info.outputs.COMPONENT_NAME }}
-      IMAGE_NAME: ${{ needs.gather-system-info.outputs.COMPONENTIMAGE_NAME_NAME }}
+      IMAGE_NAME: ${{ needs.gather-system-info.outputs.IMAGE_NAME }}
       IMAGE_REGISTRY_URL: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_URL }}
       IMAGE_REGISTRY_USERNAME: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_USERNAME }}
       OCP_URL: ${{ needs.gather-system-info.outputs.OCP_URL }}
