@@ -90,11 +90,6 @@ jobs:
       with:
         ref: ${{ needs.gather-system-info.outputs.DEV_BRANCH }}
         path: ${{ env.WORKING_DIR }}
-    - id: registry-login
-      if: matrix.environment != 'dev'
-      name: registry-login
-      run: |
-        skopeo login -u ${IMAGE_REGISTRY_USERNAME} -p ${{ secrets.IMAGE_REGISTRY_PWD }} ${IMAGE_REGISTRY_URL}
     - id: promote-image
       if: matrix.environment != 'dev'
       name: promote-image
