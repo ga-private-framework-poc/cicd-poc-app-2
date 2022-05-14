@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -ex
+
 ENV_ARRAY=$(echo "${DEV_ENVIRONMENT} $(echo ${TEST_ENVIRONMENTS} | jq -jr  '" " + .[]')" | xargs)
 echo "ENV_ARRAY: ${ENV_ARRAY}"
 for ENV in ${ENV_ARRAY}
@@ -12,6 +14,9 @@ do
     fi
 done
 
-skopeo --src-tls-verify=false --dest-tls-verify=false \
+skopeo copy --src-tls-verify=false --dest-tls-verify=false \
        ${IMAGE_REGISTRY_URL}/${IMAGE_REGISTRY_USERNAME}/${IMAGE_NAME}:${PREVIOUS_ENVIRONMENT} \
        ${IMAGE_REGISTRY_URL}/${IMAGE_REGISTRY_USERNAME}/${IMAGE_NAME}:${DEPLOY_ENV}
+
+
+set +ex
