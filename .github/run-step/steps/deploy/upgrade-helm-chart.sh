@@ -19,7 +19,7 @@ fi
 if [[ ! -z ${DEPLOY_VALUES_FILE} || ! -z ${DEPLOY_ENV_VALUES_FILE} ]]
 then
     OCP_PROJECT_NAME="${SYSTEM_NAME}-${TEAM_NAME}-${DEPLOY_ENV}"
-    helm upgrade --force --install ${COMPONENT_NAME} ${HELM_CHART_DIR} ${DEPLOY_VALUES_FILE} ${DEPLOY_ENV_VALUES_FILE} -n ${OCP_PROJECT_NAME}
+    helm upgrade --force --install --atomic ${COMPONENT_NAME} ${HELM_CHART_DIR} ${DEPLOY_VALUES_FILE} ${DEPLOY_ENV_VALUES_FILE} -n ${OCP_PROJECT_NAME}
 fi
 
 set +ex
