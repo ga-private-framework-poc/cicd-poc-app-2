@@ -43,6 +43,8 @@ jobs:
       COMPONENT_NAME: ${{ env.COMPONENT_NAME }}
       DEV_BRANCH: ${{ env.DEV_BRANCH }}
       NON_PROD_ENVIRONMENTS: ${{ env.NON_PROD_ENVIRONMENTS }}
+      IMAGE_REGISTRY_URL: ${{ env.IMAGE_REGISTRY_URL }}
+      IMAGE_REGISTRY_USERNAME: ${{ env.IMAGE_REGISTRY_USERNAME }}
       OCP_URL: ${{ env.OCP_URL }}
   promote-and-deploy:
     runs-on: ubuntu-latest
@@ -53,6 +55,8 @@ jobs:
       WORKING_DIR: ${{ needs.gather-system-info.outputs.WORKING_DIR }}
       HELM_CHART_DIR: ${{ needs.gather-system-info.outputs.HELM_CHART_DIR }}
       COMPONENT_NAME: ${{ needs.gather-system-info.outputs.COMPONENT_NAME }}
+      IMAGE_REGISTRY_URL: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_URL }}
+      IMAGE_REGISTRY_USERNAME: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_USERNAME }}
       OCP_URL: ${{ needs.gather-system-info.outputs.OCP_URL }}
       NON_PROD_ENVIRONMENTS: ${{ needs.gather-system-info.outputs.NON_PROD_ENVIRONMENTS }}
     strategy:
@@ -84,11 +88,11 @@ jobs:
       with:
         ref: ${{ needs.gather-system-info.outputs.DEV_BRANCH }}
         path: ${{ env.WORKING_DIR }}
-    - id: promote-check
+    - id: registry-login
       if: matrix.environment != 'dev'
-      name:  promote-check
+      name: registry-login
       run: |
-        skopeo --version
+        podman login -u ${IMAGE_REGISTRY_USERNAME} -p ${{ secrets.IMAGE_REGISTRY_PWD }} ${IMAGE_REGISTRY_URL}
     - id: promote-image
       if: matrix.environment != 'dev'
       name: promote-image
