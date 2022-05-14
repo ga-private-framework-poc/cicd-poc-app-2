@@ -84,13 +84,13 @@ jobs:
       with:
         ref: ${{ needs.gather-system-info.outputs.DEV_BRANCH }}
         path: ${{ env.WORKING_DIR }}
-    - id: promote
+    - id: promote-image
       if: matrix.environment != 'dev'
-      name: promote
-      run: |
-        skopeo --version
-        echo
-        echo "[WARNING: NOT IMPLEMENTED] Promoting to ${DEPLOY_ENV}..."
+      name: promote-image
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: deploy
+        step-name: promote-image
     - id: upgrade-helm-chart
       name: upgrade-helm-chart
       uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
