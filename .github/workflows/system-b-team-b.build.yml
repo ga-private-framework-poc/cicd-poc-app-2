@@ -1,0 +1,17 @@
+name: build-system-b-team-b
+on:
+  push:
+    branch: development
+  workflow_dispatch:
+jobs:
+  build-from-source:
+    uses: ga-private-framework-poc/cicd-poc-app-2/.github/workflows/build-from-source.yml@development
+    with:
+      system-name: system-b
+    secrets: inherit
+  deploy-to-all:
+    needs: build-from-source
+    uses: ga-private-framework-poc/cicd-poc-app-2/.github/workflows/promote.yml@development
+    with:
+      system-name: system-b
+    secrets: inherit
