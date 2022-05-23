@@ -2,8 +2,10 @@
 
 set -ex
 
+[ $(find ${WORKING_DIR}/.github/workflows -name "*.build.yml" -print -quit | wc -l) -gt 0 ] && cp -v *.build.yml /tmp
 git -C ${WORKING_DIR} rm -rf .github || :
 cp -RT ${CICD_REPO_MGR_DIR}/.github ${WORKING_DIR}/.github
+[ $(find /tmp -name "*.build.yml" -print -quit | wc -l) -gt 0 ] && cp -v /tmp/*.build.yml ${WORKING_DIR}/.github/workflows/
 
 echo 'Generating .github directory for ${REPO_NAME}'
 
@@ -13,7 +15,7 @@ do
 done
 
 rm ${WORKING_DIR}/.github/workflows/onboard*.* 
-mv ${WORKING_DIR}/.github/workflows/build.yml ${WORKING_DIR}/.github/workflows/build-${SYSTEM_NAME}-${TEAM_NAME}.yml
+mv ${WORKING_DIR}/.github/workflows/build.yml ${WORKING_DIR}/.github/workflows/${SYSTEM_NAME}-${TEAM_NAME}.build.yml
 
 find ${WORKING_DIR}/.github/workflows/ -type f \( -iname \*.yml -o -iname \*.yaml \) \
     -exec sed -i -e "s/%SYSTEM_NAME%/${SYSTEM_NAME}/g" \
