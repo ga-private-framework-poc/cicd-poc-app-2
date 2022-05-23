@@ -77,13 +77,16 @@ jobs:
 
         UPPERCASE_DEPLOY_ENV=$(echo ${{ matrix.environment }} | tr '[:lower:]' '[:upper:]')
         echo "UPPERCASE_DEPLOY_ENV=${UPPERCASE_DEPLOY_ENV}" >> ${GITHUB_ENV}
+
+        UPPERCASE_SYSTEM_NAME=$(echo ${SYSTEM_NAME} | tr '[:lower:]' '[:upper:]' | tr '[:punct:]' '_')
+        echo "UPPERCASE_SYSTEM_NAME=${UPPERCASE_SYSTEM_NAME}" >> ${GITHUB_ENV}
         
         set +ex
     - id: set-ocp-sa-token
       name: set-ocp-sa-token
       run: |
         set -ex
-        echo "OCP_SA_TOKEN=${{ secrets[format('OCP_SA_{0}_TOKEN', env.UPPERCASE_DEPLOY_ENV)] }}" >> ${GITHUB_ENV}
+        echo "OCP_SA_TOKEN=${{ secrets[format('OCP_SA_{0}_{1}_TOKEN', env.UPPERCASE_SYSTEM_NAME, env.UPPERCASE_DEPLOY_ENV)] }}" >> ${GITHUB_ENV}
         set +ex
     - id: clone-app-repo
       name: clone-app-repo

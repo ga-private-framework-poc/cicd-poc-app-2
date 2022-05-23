@@ -22,7 +22,8 @@ do
     set -x
 
     UPPERCASE_ENV=$(echo ${ENV} | tr '[:lower:]' '[:upper:]')
-    (cd ${WORKING_DIR}; gh secret set OCP_SA_${UPPERCASE_ENV}_TOKEN --body "${SA_TOKEN_DECODE}")
+    UPPERCASE_SYSTEM_NAME=$(echo ${SYSTEM_NAME}-${TEAM_NAME} |  | tr '[:lower:]' '[:upper:]' | tr '[:punct:]' '_')
+    (cd ${WORKING_DIR}; gh secret set OCP_SA_${UPPERCASE_SYSTEM_NAME}_${UPPERCASE_ENV}_TOKEN --body "${SA_TOKEN_DECODE}")
 done
 
 set +ex
