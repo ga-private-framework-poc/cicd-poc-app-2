@@ -1,5 +1,5 @@
 team: team-b
-branch: development
+branch: development-b
 components:
   - repo: cicd-poc-app-1
     codebase: java11
