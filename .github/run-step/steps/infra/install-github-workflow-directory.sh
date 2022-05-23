@@ -7,12 +7,13 @@ cp -RT ${CICD_REPO_MGR_DIR}/.github ${WORKING_DIR}/.github
 
 echo 'Generating .github directory for ${REPO_NAME}'
 
-rm ${WORKING_DIR}/.github/workflows/onboard-system.*
-
 for F_NAME in $(find ${WORKING_DIR}/.github/workflows -name "*.template")
 do
     mv ${F_NAME} $(echo ${F_NAME} | sed -e "s/.template$//") ;
 done
+
+rm ${WORKING_DIR}/.github/workflows/onboard*.* 
+mv ${WORKING_DIR}/.github/workflows/build.yml ${WORKING_DIR}/.github/workflows/build-${SYSTEM_NAME}-${TEAM_NAME}.yml
 
 find ${WORKING_DIR}/.github/workflows/ -type f \( -iname \*.yml -o -iname \*.yaml \) \
     -exec sed -i -e "s/%SYSTEM_NAME%/${SYSTEM_NAME}/g" \
