@@ -1,0 +1,34 @@
+name: 'Dynamic Script Runner'
+description: 'Execute a script found by convention'
+author: 'CICD Team'
+inputs:
+  label:
+    description: 'Platform/language of repository being built and/or deployed'
+    required: true
+  step-name:
+    description: 'Name of step; will correspond to name of script to execute unless override is set'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - id: run-step-script
+      shell: bash
+      run: |
+          STEP_NAME='${{ inputs.step-name }}'
+
+          if [[ ! -z ${COMPONENT_NAME} ]]
+          then
+              OVERRIDE_STEP_NAME=$(echo ${OVERRIDES} | yq '.${{ inputs.step-name }}' -)
+              if [[ ${OVERRIDE_STEP_NAME} != 'null' ]]
+              then
+                echo "Step ${STEP_NAME} overridden by ${OVERRIDE_STEP_NAME}"
+                STEP_NAME=${OVERRIDE_STEP_NAME}
+              fi
+          fi
+
+          if [[ -f ${WORKING_DIR}/.github/steps/${{ inputs.label }}/${STEP_NAME}.sh ]]
+          then
+              ${WORKING_DIR}/.github/overrides/${{ inputs.label }}/${STEP_NAME}.sh
+          else
+              ${GITHUB_ACTION_PATH}/steps/${{ inputs.label }}/${STEP_NAME}.sh
+          fi

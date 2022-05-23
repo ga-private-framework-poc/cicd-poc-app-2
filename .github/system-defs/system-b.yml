@@ -1,0 +1,21 @@
+team: team-b
+branch: development
+components:
+  - repo: cicd-poc-app-1
+    codebase: java11
+    status: active
+  - repo: cicd-poc-app-2
+    codebase: node16
+    status: active
+dev-environment: dev
+prod-environment: prod
+test-environments:
+  - qa
+  - uat
+  - stg
+resource-quotas:
+  dev: small
+  qa: medium
+  uat: medium
+  stg: medium
+  prod: large

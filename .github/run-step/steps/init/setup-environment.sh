@@ -1,0 +1,17 @@
+
+#!/usr/bin/bash
+
+set -x
+
+CICD_MANAGER=cicd-manager
+
+echo "CICD_MANAGER=${CICD_MANAGER}" >> ${GITHUB_ENV}
+
+CICD_REPO_MGR_DIR=${GITHUB_WORKSPACE}/${CICD_MANAGER}
+echo "CICD_REPO_MGR_DIR=${CICD_REPO_MGR_DIR}" >> ${GITHUB_ENV}
+echo "SYSTEM_CONFIG_FILE=${CICD_REPO_MGR_DIR}/.github/system-config.yml" >> ${GITHUB_ENV}
+echo "SYSTEM_DEFS_DIR=${GITHUB_WORKSPACE}/${CICD_MANAGER}/.github/system-defs" >> ${GITHUB_ENV}
+
+echo "WORKING_DIR=${GITHUB_WORKSPACE}/${GITHUB_REPOSITORY}" >> ${GITHUB_ENV}
+
+set +x
