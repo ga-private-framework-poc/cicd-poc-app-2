@@ -1,0 +1,116 @@
+name: promote
+on:
+  workflow_call:
+    inputs:
+      system-name:
+        required: true
+        type: string
+jobs:
+  gather-system-info:
+    runs-on: ubuntu-latest
+    env:
+      SYSTEM_NAME: ${{ inputs.system-name }}
+    steps:
+    - id: setup-environment
+      name: setup-environment
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: init
+        step-name: setup-environment
+    - id: clone-cicd-manager-repo
+      name: clone-cicd-manager-repo
+      uses: actions/checkout@v2
+      with:
+        repository: ga-private-framework-poc/cicd-manager
+        ref: development
+        path: ${{ env.CICD_REPO_MGR_DIR }}
+    - id: parse-system-def
+      name: parse-system-def
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: init
+        step-name: parse-system-def
+    - id: parse-component-def
+      name: parse-component-def
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: init
+        step-name: parse-component-def
+    outputs:
+      TEAM_NAME: ${{ env.TEAM_NAME }}
+      WORKING_DIR: ${{ env.WORKING_DIR }}
+      HELM_CHART_DIR: ${{ env.HELM_CHART_DIR }}
+      COMPONENT_NAME: ${{ env.COMPONENT_NAME }}
+      IMAGE_NAME: ${{ env.IMAGE_NAME }}
+      DEV_BRANCH: ${{ env.DEV_BRANCH }}
+      NON_PROD_ENVIRONMENTS: ${{ env.NON_PROD_ENVIRONMENTS }}
+      IMAGE_REGISTRY_URL: ${{ env.IMAGE_REGISTRY_URL }}
+      IMAGE_REGISTRY_USERNAME: ${{ env.IMAGE_REGISTRY_USERNAME }}
+      OCP_URL: ${{ env.OCP_URL }}
+  promote-and-deploy:
+    runs-on: ubuntu-latest
+    needs: gather-system-info
+    env:
+      SYSTEM_NAME: ${{ inputs.system-name }}
+      TEAM_NAME: ${{ needs.gather-system-info.outputs.TEAM_NAME }}
+      WORKING_DIR: ${{ needs.gather-system-info.outputs.WORKING_DIR }}
+      HELM_CHART_DIR: ${{ needs.gather-system-info.outputs.HELM_CHART_DIR }}
+      COMPONENT_NAME: ${{ needs.gather-system-info.outputs.COMPONENT_NAME }}
+      IMAGE_NAME: ${{ needs.gather-system-info.outputs.IMAGE_NAME }}
+      IMAGE_REGISTRY_URL: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_URL }}
+      IMAGE_REGISTRY_USERNAME: ${{ needs.gather-system-info.outputs.IMAGE_REGISTRY_USERNAME }}
+      IMAGE_REGISTRY_PWD: ${{ secrets.IMAGE_REGISTRY_PWD }}
+      OCP_URL: ${{ needs.gather-system-info.outputs.OCP_URL }}
+      NON_PROD_ENVIRONMENTS: ${{ needs.gather-system-info.outputs.NON_PROD_ENVIRONMENTS }}
+    strategy:
+      max-parallel: 1
+      matrix:
+        environment: ${{ fromJSON(needs.gather-system-info.outputs.NON_PROD_ENVIRONMENTS) }}
+    steps:
+    - id: set-env
+      name: set-env
+      run: |
+        set -ex
+
+        DEPLOY_ENV=${{ matrix.environment }}
+        echo "DEPLOY_ENV=${DEPLOY_ENV}" >> ${GITHUB_ENV}
+
+        UPPERCASE_DEPLOY_ENV=$(echo ${{ matrix.environment }} | tr '[:lower:]' '[:upper:]')
+        echo "UPPERCASE_DEPLOY_ENV=${UPPERCASE_DEPLOY_ENV}" >> ${GITHUB_ENV}
+        
+        set +ex
+    - id: set-ocp-sa-token
+      name: set-ocp-sa-token
+      run: |
+        set -ex
+        echo "OCP_SA_TOKEN=${{ secrets[format('OCP_SA_{0}_TOKEN', env.UPPERCASE_DEPLOY_ENV)] }}" >> ${GITHUB_ENV}
+        set +ex
+    - id: clone-app-repo
+      name: clone-app-repo
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.gather-system-info.outputs.DEV_BRANCH }}
+        path: ${{ env.WORKING_DIR }}
+    - id: promote-image
+      if: matrix.environment != 'dev'
+      name: promote-image
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: deploy
+        step-name: promote-image
+    - id: upgrade-helm-chart
+      name: upgrade-helm-chart
+      uses: ga-private-framework-poc/cicd-poc-app-2/.github/run-step@development
+      with:
+        label: deploy
+        step-name: upgrade-helm-chart
+    - id: verify-deployment-and-gather-evidence
+      name: verify-deployment-and-gather-evidence
+      run: |
+        echo
+        echo "[WARNING: NOT IMPLEMENTED] Verifying deployment and gathering evidence for deployment of ${COMPONENT_NAME} in ${DEPLOY_ENV}..."
+    - id: publish-evidence
+      name: publish-evidence
+      run: |
+        echo
+        echo "[WARNING: NOT IMPLEMENTED] Publishing evidence of successful deployment of ${COMPONENT_NAME} in ${DEPLOY_ENV}..."
